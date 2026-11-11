@@ -84,22 +84,24 @@ import { useState } from 'react'
 
 import { memo } from 'react';
 
-const Child = memo(function Child({ name }) {
+const Child = memo(function Child({ user }) {
   console.log("Child Rendered");
 
-  return <h2>Hello {name}</h2>
+  return <h2>Hello {user.name}</h2>
 })
 
 function App(){
 
   const [count, setCount] = useState(0);
 
+  const user = {name : "Arav"};
+
   return (
     <>
       <h2>Count : {count}</h2>
       <button onClick={() => setCount(count + 1)}>Increase</button>
 
-      <Child name = "Arav" />
+      <Child user = {user} />
     </>
   )
 }
