@@ -51,7 +51,7 @@ import { useState } from 'react'
 
 // export default App
 
-// with child.memo
+// with React.memo
 
 // import { memo } from 'react';
 
@@ -81,29 +81,61 @@ import { useState } from 'react'
 
 // export default App
 
+// with react.memo string props
 
-import { memo } from 'react';
+// import { memo } from 'react';
 
-const Child = memo(function Child({ user }) {
-  console.log("Child Rendered");
+// const Child = memo(function Child({ user }) {
+//   console.log("Child Rendered");
 
-  return <h2>Hello {user.name}</h2>
-})
+//   return <h2>Hello {user.name}</h2>
+// })
 
-function App(){
+// function App(){
+
+//   const [count, setCount] = useState(0);
+
+//   const user = {name : "Arav"};
+
+//   return (
+//     <>
+//       <h2>Count : {count}</h2>
+//       <button onClick={() => setCount(count + 1)}>Increase</button>
+
+//       <Child user = {user} />
+//     </>
+//   )
+// }
+
+// export default App
+
+// without useMemo
+
+function ProductList(){
 
   const [count, setCount] = useState(0);
 
-  const user = {name : "Arav"};
+  const products = [
+    { id: 1, name: "Laptop", price: 60000 },
+    { id: 2, name: "Mouse", price: 500 },
+    { id: 3, name: "Phone", price: 30000 },
+    { id: 4, name: "Keyboard", price: 2000 }
+  ];
+
+  console.log("Filtering prodducts...");
+
+  const expensiveProducts = products.filter((product) => product.price > 10000);
 
   return (
     <>
       <h2>Count : {count}</h2>
       <button onClick={() => setCount(count + 1)}>Increase</button>
 
-      <Child user = {user} />
+      {expensiveProducts.map((product) => (
+        <p> key = {product.id}, {product.name} - {product.price}</p>
+      ))}
     </>
   )
 }
 
-export default App
+export default ProductList
