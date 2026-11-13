@@ -219,32 +219,107 @@
 
 // useCallback
 
-import { useState, memo, useCallback } from "react";
+// import { useState, memo, useCallback } from "react";
 
-const Child = memo(function Child({ handleClick }) {
-  console.log("Child Rendered");
+// const Child = memo(function Child({ handleClick }) {
+//   console.log("Child Rendered");
+
+//   return (
+//     <button onClick={handleClick}>Click Child</button>
+//   )
+// });
+
+// function App(){
+//   const [count, setCount] = useState(0);
+
+//   const handleClick = useCallback(() => {
+//     console.log("Child button Chilked");
+//   }, []);
+
+//   return (
+//     <div>
+//       <h2>Count : {count}</h2>
+      
+//       <button onClick={() => setCount(count + 1)}>Increase</button>
+
+//       <Child handleClick = {handleClick}/>
+//     </div>
+//   )
+// }
+
+// export default App
+
+// Product e-commerce application.
+
+import { useState, useMemo, useCallback, memo } from "react";
+
+const initialProducts = [
+  { id: 1, name: "Laptop", price: 60000 },
+  { id: 2, name: "Mouse", price: 500 },
+  { id: 3, name: "Phone", price: 30000 },
+  { id: 4, name: "Keyboard", price: 2000 }
+];
+
+// React.memo
+const Product = memo(function Product({ product, onDelete }) {
+  console.log("Product rendered:", product.name);
 
   return (
-    <button onClick={handleClick}>Click Child</button>
-  )
+    <div>
+      <h3>{product.name}</h3>
+      <p>₹{product.price}</p>
+
+      <button onClick={() => onDelete(product.id)}>
+        Delete
+      </button>
+    </div>
+  );
 });
 
-function App(){
+function App() {
+  const [products, setProducts] = useState(initialProducts);
+  const [search, setSearch] = useState("");
   const [count, setCount] = useState(0);
 
-  const handleClick = useCallback(() => {
-    console.log("Child button Chilked");
+  // useMemo
+  const filteredProducts = useMemo(() => {
+    console.log("Filtering products");
+
+    return products.filter((product) =>
+      product.name.toLowerCase().includes(search.toLowerCase())
+    );
+  }, [products, search]);
+
+  // useCallback
+  const handleDelete = useCallback((id) => {
+    setProducts((previousProducts) =>
+      previousProducts.filter((product) => product.id !== id)
+    );
   }, []);
 
   return (
     <div>
-      <h2>Count : {count}</h2>
-      
-      <button onClick={() => setCount(count + 1)}>Increase</button>
+      <h1>Product Management</h1>
 
-      <Child handleClick = {handleClick}/>
+      <input
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        placeholder="Search products"
+      />
+
+      <button onClick={() => setCount(count + 1)}>
+        Count: {count}
+      </button>
+
+      {filteredProducts.map((product) => (
+        <Product
+          key={product.id}
+          product={product}
+          onDelete={handleDelete}
+        />
+      ))}
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
