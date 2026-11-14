@@ -328,98 +328,139 @@
 
 // useReducer
 
-import { useReducer } from "react";
+// import { useReducer } from "react";
 
-const initialState = {
-  name : "",
-  age : 0,
-  email : "",
-  isSubmitted : false
-};
+// const initialState = {
+//   name : "",
+//   age : 0,
+//   email : "",
+//   isSubmitted : false
+// };
 
-function reducer(state, action){
-  switch(action.type){
+// function reducer(state, action){
+//   switch(action.type){
 
-    case "UPDATE_NAME":
-      return {
-        ...state,
-        name : action.payload
-      };
+//     case "UPDATE_NAME":
+//       return {
+//         ...state,
+//         name : action.payload
+//       };
 
-    case "UPDATE_AGE":
-      return {
-        ...state,
-        age : action.payload
-      }
+//     case "UPDATE_AGE":
+//       return {
+//         ...state,
+//         age : action.payload
+//       }
 
-    case "UPDATE_EMAIL":
-      return {
-        ...state,
-        email : action.payload
-      }
+//     case "UPDATE_EMAIL":
+//       return {
+//         ...state,
+//         email : action.payload
+//       }
 
-    case "SUBMIT":
-      return {
-        ...state,
-        isSubmitted : true
-      }
+//     case "SUBMIT":
+//       return {
+//         ...state,
+//         isSubmitted : true
+//       }
 
-    case "RESET":
-      return initialState;
+//     case "RESET":
+//       return initialState;
 
-    default:
-      return state;
-  }
-}
+//     default:
+//       return state;
+//   }
+// }
 
-function Registration() {
-  const [state, dispatch] = useReducer(reducer, initialState);
+// function Registration() {
+//   const [state, dispatch] = useReducer(reducer, initialState);
 
-  return (
-    <div>
-      <h2>Registration</h2>
+//   return (
+//     <div>
+//       <h2>Registration</h2>
 
-      <input type="text"
-        placeholder="Name"
-        value={state.name}
-        onChange={(e) => 
-          dispatch({
-            type: "UPDATE_NAME",
-            payload : e.target.value
-          })
-        }
-      />
+//       <input type="text"
+//         placeholder="Name"
+//         value={state.name}
+//         onChange={(e) => 
+//           dispatch({
+//             type: "UPDATE_NAME",
+//             payload : e.target.value
+//           })
+//         }
+//       />
 
-      <input type="number"
-        placeholder="Age"
-        value = {state.age}
-        onChange={(e) => 
-          dispatch({
-            type : "UPDATE_AGE",
-            payload : Number(e.target.value)
-          })
-        }
-      />
+//       <input type="number"
+//         placeholder="Age"
+//         value = {state.age}
+//         onChange={(e) => 
+//           dispatch({
+//             type : "UPDATE_AGE",
+//             payload : Number(e.target.value)
+//           })
+//         }
+//       />
 
-      <input
-        placeholder="Email"
-        value = {state.email}
-        onChange={(e) => 
-          dispatch({
-            type : "UPDATE_EMAIL",
-            payload : e.target.value
-          })
-        }
-      />
+//       <input
+//         placeholder="Email"
+//         value = {state.email}
+//         onChange={(e) => 
+//           dispatch({
+//             type : "UPDATE_EMAIL",
+//             payload : e.target.value
+//           })
+//         }
+//       />
 
-      <button onClick={() => dispatch({type : "SUBMIT"})}>Submit</button>
+//       <button onClick={() => dispatch({type : "SUBMIT"})}>Submit</button>
         
-      <button onClick={() => dispatch({ type : "RESET"})}>Reset</button>
+//       <button onClick={() => dispatch({ type : "RESET"})}>Reset</button>
 
-      <pre>{JSON.stringify(state, null, 2)}</pre>
+//       <pre>{JSON.stringify(state, null, 2)}</pre>
 
-    </div>
-  )
+//     </div>
+//   )
+// }
+
+// export default Registration
+
+// context API
+
+import { createContext, useContext } from "react";
+
+export const UserContext = createContext(null);
+
+function App(){
+    const user = {
+        name : "Arav",
+        email : "aravpp03@gmail.com"
+    };
+
+    return (
+        <UserContext.Provider value={user}>
+            <Dashboard/>
+        </UserContext.Provider>
+    );
 }
 
-export default Registration
+function Dashboard() {
+    return (
+        <div>
+            <h2>Dashboard</h2>
+            <UserName />
+        </div>
+    )
+}
+
+function UserName() {
+    const user = useContext(UserContext);
+
+    return (
+        <div>
+            <h1>Hello {user.name}</h1>
+            <p>{user.email}</p>
+        </div>
+    )
+}
+
+export default App;
