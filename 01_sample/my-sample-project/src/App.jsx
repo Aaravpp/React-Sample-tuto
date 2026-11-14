@@ -2,6 +2,8 @@
 // import Welcome from './components/welcome'
 // import { useState } from 'react'
 
+// const { useReducer } = require("react");
+
 // function App() {
 
 //   const [count, setCount] = useState(0);
@@ -251,75 +253,173 @@
 
 // Product e-commerce application.
 
-import { useState, useMemo, useCallback, memo } from "react";
+// import { useState, useMemo, useCallback, memo } from "react";
 
-const initialProducts = [
-  { id: 1, name: "Laptop", price: 60000 },
-  { id: 2, name: "Mouse", price: 500 },
-  { id: 3, name: "Phone", price: 30000 },
-  { id: 4, name: "Keyboard", price: 2000 }
-];
+// const initialProducts = [
+//   { id: 1, name: "Laptop", price: 60000 },
+//   { id: 2, name: "Mouse", price: 500 },
+//   { id: 3, name: "Phone", price: 30000 },
+//   { id: 4, name: "Keyboard", price: 2000 }
+// ];
 
-// React.memo
-const Product = memo(function Product({ product, onDelete }) {
-  console.log("Product rendered:", product.name);
+// // React.memo
+// const Product = memo(function Product({ product, onDelete }) {
+//   console.log("Product rendered:", product.name);
 
-  return (
-    <div>
-      <h3>{product.name}</h3>
-      <p>₹{product.price}</p>
+//   return (
+//     <div>
+//       <h3>{product.name}</h3>
+//       <p>₹{product.price}</p>
 
-      <button onClick={() => onDelete(product.id)}>
-        Delete
-      </button>
-    </div>
-  );
-});
+//       <button onClick={() => onDelete(product.id)}>
+//         Delete
+//       </button>
+//     </div>
+//   );
+// });
 
-function App() {
-  const [products, setProducts] = useState(initialProducts);
-  const [search, setSearch] = useState("");
-  const [count, setCount] = useState(0);
+// function App() {
+//   const [products, setProducts] = useState(initialProducts);
+//   const [search, setSearch] = useState("");
+//   const [count, setCount] = useState(0);
 
-  // useMemo
-  const filteredProducts = useMemo(() => {
-    console.log("Filtering products");
+//   // useMemo
+//   const filteredProducts = useMemo(() => {
+//     console.log("Filtering products");
 
-    return products.filter((product) =>
-      product.name.toLowerCase().includes(search.toLowerCase())
-    );
-  }, [products, search]);
+//     return products.filter((product) =>
+//       product.name.toLowerCase().includes(search.toLowerCase())
+//     );
+//   }, [products, search]);
 
-  // useCallback
-  const handleDelete = useCallback((id) => {
-    setProducts((previousProducts) =>
-      previousProducts.filter((product) => product.id !== id)
-    );
-  }, []);
+//   // useCallback
+//   const handleDelete = useCallback((id) => {
+//     setProducts((previousProducts) =>
+//       previousProducts.filter((product) => product.id !== id)
+//     );
+//   }, []);
 
-  return (
-    <div>
-      <h1>Product Management</h1>
+//   return (
+//     <div>
+//       <h1>Product Management</h1>
 
-      <input
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        placeholder="Search products"
-      />
+//       <input
+//         value={search}
+//         onChange={(e) => setSearch(e.target.value)}
+//         placeholder="Search products"
+//       />
 
-      <button onClick={() => setCount(count + 1)}>
-        Count: {count}
-      </button>
+//       <button onClick={() => setCount(count + 1)}>
+//         Count: {count}
+//       </button>
 
-      {filteredProducts.map((product) => (
-        <Product
-          key={product.id}
-          product={product}
-          onDelete={handleDelete}
-        />
-      ))}
-    </div>
-  );
+//       {filteredProducts.map((product) => (
+//         <Product
+//           key={product.id}
+//           product={product}
+//           onDelete={handleDelete}
+//         />
+//       ))}
+//     </div>
+//   );
+// }
+
+// export default App;
+
+// useReducer
+
+import { useReducer } from "react";
+
+const initialState = {
+  name : "",
+  age : 0,
+  email : "",
+  isSubmitted : false
+};
+
+function reducer(state, action){
+  switch(action.type){
+
+    case "UPDATE_NAME":
+      return {
+        ...state,
+        name : action.payload
+      };
+
+    case "UPDATE_AGE":
+      return {
+        ...state,
+        age : action.payload
+      }
+
+    case "UPDATE_EMAIL":
+      return {
+        ...state,
+        email : action.payload
+      }
+
+    case "SUBMIT":
+      return {
+        ...state,
+        isSubmitted : true
+      }
+
+    case "RESET":
+      return initialState;
+
+    default:
+      return state;
+  }
 }
 
-export default App;
+function Registration() {
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  return (
+    <div>
+      <h2>Registration</h2>
+
+      <input type="text"
+        placeholder="Name"
+        value={state.name}
+        onChange={(e) => 
+          dispatch({
+            type: "UPDATE_NAME",
+            payload : e.target.value
+          })
+        }
+      />
+
+      <input type="number"
+        placeholder="Age"
+        value = {state.age}
+        onChange={(e) => 
+          dispatch({
+            type : "UPDATE_AGE",
+            payload : Number(e.target.value)
+          })
+        }
+      />
+
+      <input
+        placeholder="Email"
+        value = {state.email}
+        onChange={(e) => 
+          dispatch({
+            type : "UPDATE_EMAIL",
+            payload : e.target.value
+          })
+        }
+      />
+
+      <button onClick={() => dispatch({type : "SUBMIT"})}>Submit</button>
+        
+      <button onClick={() => dispatch({ type : "RESET"})}>Reset</button>
+
+      <pre>{JSON.stringify(state, null, 2)}</pre>
+
+    </div>
+  )
+}
+
+export default Registration
