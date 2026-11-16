@@ -426,41 +426,123 @@
 
 // context API
 
-import { createContext, useContext } from "react";
+// import { createContext, useContext } from "react";
 
-export const UserContext = createContext(null);
+// export const UserContext = createContext(null);
 
-function App(){
-    const user = {
-        name : "Arav",
-        email : "aravpp03@gmail.com"
-    };
+// function App(){
+//     const user = {
+//         name : "Arav",
+//         email : "aravpp03@gmail.com"
+//     };
+
+//     return (
+//         <UserContext.Provider value={user}>
+//             <Dashboard/>
+//         </UserContext.Provider>
+//     );
+// }
+
+// function Dashboard() {
+//     return (
+//         <div>
+//             <h2>Dashboard</h2>
+//             <UserName />
+//         </div>
+//     )
+// }
+
+// function UserName() {
+//     const user = useContext(UserContext);
+
+//     return (
+//         <div>
+//             <h1>Hello {user.name}</h1>
+//             <p>{user.email}</p>
+//         </div>
+//     )
+// }
+
+// export default App;
+
+// import { UserContext } from "./context/UserContext";
+// import Dashboard from "./components/Dashboard";
+
+// function App() {
+//     const user = {
+//         name : "Arav",
+//         email : "aravpp03@gmail.com"
+//     };
+
+//     return (
+//         <UserContext.Provider value={user}>
+//             <Dashboard />
+//         </UserContext.Provider>
+//     )
+// }
+
+// export default App;
+
+// Task 1
+
+// import { useState } from "react";
+
+// function Product({ name, price}) {
+//     console.log("Product Rendered.");
+
+//     return (
+//         <div>
+//             <h1>{ name }</h1>
+//             <h4>{ price }</h4>
+//         </div>
+//     );
+// }
+
+// function App() {
+
+//     const [count, setCount] = useState(0);
+
+//     return(
+//         <div>
+//             <h2>Count : {count}</h2>
+
+//             <button onClick={() => {setCount(count + 1)}}>Increament</button>
+
+//             <Product name = "Laptop" price={82999}/>
+//         </div>
+//     );
+// }
+
+// export default App;
+
+
+// Task 1 React.memo
+
+import { useState, memo } from "react";
+
+const Product = memo(function Product({ name, price }) {
+    console.log("Product Rendered.");
 
     return (
-        <UserContext.Provider value={user}>
-            <Dashboard/>
-        </UserContext.Provider>
+        <div>
+            <h1>{name}</h1>
+            <h4>{price}</h4>
+        </div>
+    )
+})
+
+function App() {
+    const [count, setCount] = useState(0);
+
+    return (
+        <div>
+            <h1>Count : {count}</h1>
+
+            <button onClick={() => setCount(count + 1)}>Increase</button>
+
+            <Product name = "Laptop" price = {82999}/>
+        </div>
     );
-}
-
-function Dashboard() {
-    return (
-        <div>
-            <h2>Dashboard</h2>
-            <UserName />
-        </div>
-    )
-}
-
-function UserName() {
-    const user = useContext(UserContext);
-
-    return (
-        <div>
-            <h1>Hello {user.name}</h1>
-            <p>{user.email}</p>
-        </div>
-    )
 }
 
 export default App;
