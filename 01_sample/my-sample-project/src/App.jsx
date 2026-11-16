@@ -518,29 +518,67 @@
 
 // Task 1 React.memo
 
-import { useState, memo } from "react";
+// import { useState, memo } from "react";
 
-const Product = memo(function Product({ name, price }) {
-    console.log("Product Rendered.");
+// const Product = memo(function Product({ name, price }) {
+//     console.log("Product Rendered.");
+
+//     return (
+//         <div>
+//             <h1>{name}</h1>
+//             <h4>{price}</h4>
+//         </div>
+//     )
+// })
+
+// function App() {
+//     const [count, setCount] = useState(0);
+
+//     return (
+//         <div>
+//             <h1>Count : {count}</h1>
+
+//             <button onClick={() => setCount(count + 1)}>Increase</button>
+
+//             <Product name = "Laptop" price = {82999}/>
+//         </div>
+//     );
+// }
+
+// export default App;
+
+// useCallback
+
+import { useState, memo, useCallback } from "react";
+
+const Product = memo(function Product({ name, price, onbuy}) {
+    console.log("Product component Rendered.");
 
     return (
         <div>
             <h1>{name}</h1>
             <h4>{price}</h4>
+            
+            <button onClick={onbuy}>Buy now</button>
         </div>
-    )
+    );
 })
 
 function App() {
+
     const [count, setCount] = useState(0);
+
+    function handleBuy() {
+        console.log("Product Purchased!");
+    }
 
     return (
         <div>
-            <h1>Count : {count}</h1>
+            <h2>Count : {count}</h2>
 
             <button onClick={() => setCount(count + 1)}>Increase</button>
 
-            <Product name = "Laptop" price = {82999}/>
+            <Product name = "Laptop" price = {899999} onbuy = {handleBuy}/>
         </div>
     );
 }
