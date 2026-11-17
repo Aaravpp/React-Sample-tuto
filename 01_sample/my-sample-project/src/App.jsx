@@ -568,9 +568,9 @@ function App() {
 
     const [count, setCount] = useState(0);
 
-    function handleBuy() {
+    const handleBuy = useCallback(() => {
         console.log("Product Purchased!");
-    }
+    }, []);
 
     return (
         <div>
