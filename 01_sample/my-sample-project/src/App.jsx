@@ -2,6 +2,8 @@
 // import Welcome from './components/welcome'
 // import { useState } from 'react'
 
+// const { useReducer } = require("react");
+
 // const { useMemo } = require("react");
 
 // const { useReducer } = require("react");
@@ -590,78 +592,163 @@
 
 // with useMemo
 
-import { useState, memo, useCallback, useMemo } from "react";
+// import { useState, memo, useCallback, useMemo } from "react";
 
-const products = [
-    { id: 1, name: "Laptop", price: 60000 },
-    { id: 2, name: "Mouse", price: 500 },
-    { id: 3, name: "Keyboard", price: 1500 },
-    { id: 4, name: "Monitor", price: 12000 },
-    { id: 5, name: "Mobile", price: 30000 },
-    { id: 6, name: "Headphones", price: 2500 },
-    { id: 7, name: "Tablet", price: 20000 },
-    { id: 8, name: "Webcam", price: 3500 },
-];
+// const products = [
+//     { id: 1, name: "Laptop", price: 60000 },
+//     { id: 2, name: "Mouse", price: 500 },
+//     { id: 3, name: "Keyboard", price: 1500 },
+//     { id: 4, name: "Monitor", price: 12000 },
+//     { id: 5, name: "Mobile", price: 30000 },
+//     { id: 6, name: "Headphones", price: 2500 },
+//     { id: 7, name: "Tablet", price: 20000 },
+//     { id: 8, name: "Webcam", price: 3500 },
+// ];
 
-const Product = memo(function Product({ product, onBuy }) {
-    console.log(`${product.name} Child Component Rendered.`);
+// const Product = memo(function Product({ product, onBuy }) {
+//     console.log(`${product.name} Child Component Rendered.`);
 
-    return (
-        <div>
-            <h2>{product.name}</h2>
-            <h4>{product.price}</h4>
+//     return (
+//         <div>
+//             <h2>{product.name}</h2>
+//             <h4>{product.price}</h4>
 
-            <button onClick={() => (onBuy(product.name))}>Buy Now</button>
-        </div>
-    )
-});
+//             <button onClick={() => (onBuy(product.name))}>Buy Now</button>
+//         </div>
+//     )
+// });
+
+// function App() {
+
+//     const [count, setCount] = useState(0);
+//     const [maxPrice, setMaxPrice] = useState(10000);
+
+//     console.log("App Components Rendered.");
+
+//     const handleBuy = useCallback((name) => {
+//         console.log(`${name} Purchased!`);
+//     }, []);
+
+//     const filteringProducts = useMemo(() => {
+//         console.log("Filtering Products...");
+
+//         return products.filter((product) => product.price <= maxPrice)
+//     }, [maxPrice]);
+
+//     return (
+//         <div>
+            
+//             <h1>ONLINE SHOPING CENTER</h1>
+  
+//             <h2>Count : {count}</h2>
+
+//             <button onClick={() => setCount(count + 1)}>Increase</button>
+//             <hr />
+
+//             <h2>Maximum Price : {maxPrice}</h2>
+
+//             <input type= "range"
+//                 min={1000}
+//                 max={100000}
+//                 step={1000}
+//                 value={maxPrice}
+//                 onChange={(e) => setMaxPrice(Number(e.target.value))}
+//             />
+
+//             <hr />
+
+//             {filteringProducts.map((product) => (
+//                 <Product key = {product.id} product = {product} onBuy = {handleBuy}/>
+//             ))}
+
+//         </div>
+//     );
+
+// }
+
+// export default App;
+
+// useReducer
+
+import { act, useReducer } from "react";
+
+const initialState = {
+    name : "",
+    age : 0,
+    email : "",
+    isSubmitted : false
+};
+
+function reducer(state, action){
+    switch (action.type) {
+        case "UPDATE_NAME":
+            return {
+                ...state,
+                name : action.payload
+            };
+        
+        case "UPDATE_AGE":
+            return {
+                ...state,
+                age : action.payload
+            };
+
+        case "UPDATE_EMAIL":
+            return {
+                ...state,
+                email : action.payload
+            };
+
+        case "SUBMIT" :
+            return {
+                ...state,
+                isSubmitted : action.payload
+            };
+
+        default:
+            return state;
+    }
+}
 
 function App() {
 
-    const [count, setCount] = useState(0);
-    const [maxPrice, setMaxPrice] = useState(10000);
-
-    console.log("App Components Rendered.");
-
-    const handleBuy = useCallback((name) => {
-        console.log(`${name} Purchased!`);
-    }, []);
-
-    const filteringProducts = useMemo(() => {
-        console.log("Filtering Products...");
-
-        return products.filter((product) => product.price <= maxPrice)
-    }, [maxPrice]);
+    const [state, dispatch] = useReducer(reducer, initialState);
 
     return (
         <div>
-            
-            <h1>ONLINE SHOPING CENTER</h1>
-  
-            <h2>Count : {count}</h2>
-
-            <button onClick={() => setCount(count + 1)}>Increase</button>
-            <hr />
-
-            <h2>Maximum Price : {maxPrice}</h2>
-
-            <input type= "range"
-                min={1000}
-                max={100000}
-                step={1000}
-                value={maxPrice}
-                onChange={(e) => setMaxPrice(Number(e.target.value))}
+            <input type="text"
+            placeholder="Name"
+            value={state.name}
+            onChange={(e) => dispatch(
+                {type : "UPDATE_NAME",
+                    payload : e.target.value
+                }
+            )}
             />
 
-            <hr />
+            <input type= "number"
+            placeholder="Age"
+            value={state.age}
+            onChange={(e) => dispatch({
+                type : "UPDATE_AGE",
+                payload : e.target.value
+            })}
+            />
 
-            {filteringProducts.map((product) => (
-                <Product key = {product.id} product = {product} onBuy = {handleBuy}/>
-            ))}
+            <input type= "email"
+            placeholder="Email"
+            value={state.email}
+            onChange={(e) => dispatch({
+                type : "UPDATE_EMAIL",
+                payload : e.target.value
+            })}
+            />
 
+            <button onClick={() => dispatch({
+                type : "SUBMIT"})}>
+            Submit</button>
         </div>
-    );
-
+    )
 }
 
 export default App;
