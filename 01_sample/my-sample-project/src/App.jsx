@@ -2,6 +2,8 @@
 // import Welcome from './components/welcome'
 // import { useState } from 'react'
 
+// const { useMemo } = require("react");
+
 // const { useReducer } = require("react");
 
 // function App() {
@@ -549,38 +551,117 @@
 
 // useCallback
 
-import { useState, memo, useCallback } from "react";
+// import { useState, memo, useCallback } from "react";
 
-const Product = memo(function Product({ name, price, onbuy}) {
-    console.log("Product component Rendered.");
+// const Product = memo(function Product({ name, price, onbuy}) {
+//     console.log("Product component Rendered.");
+
+//     return (
+//         <div>
+//             <h1>{name}</h1>
+//             <h4>{price}</h4>
+            
+//             <button onClick={onbuy}>Buy now</button>
+//         </div>
+//     );
+// })
+
+// function App() {
+
+//     const [count, setCount] = useState(0);
+
+//     const handleBuy = useCallback(() => {
+//         console.log("Product Purchased!");
+//     }, []);
+
+//     return (
+//         <div>
+//             <h2>Count : {count}</h2>
+
+//             <button onClick={() => setCount(count + 1)}>Increase</button>
+
+//             <Product name = "Laptop" price = {899999} onbuy = {handleBuy}/>
+//         </div>
+//     );
+// }
+
+// export default App;
+
+
+// with useMemo
+
+import { useState, memo, useCallback, useMemo } from "react";
+
+const products = [
+    { id: 1, name: "Laptop", price: 60000 },
+    { id: 2, name: "Mouse", price: 500 },
+    { id: 3, name: "Keyboard", price: 1500 },
+    { id: 4, name: "Monitor", price: 12000 },
+    { id: 5, name: "Mobile", price: 30000 },
+    { id: 6, name: "Headphones", price: 2500 },
+    { id: 7, name: "Tablet", price: 20000 },
+    { id: 8, name: "Webcam", price: 3500 },
+];
+
+const Product = memo(function Product({ product, onBuy }) {
+    console.log(`${product.name} Child Component Rendered.`);
 
     return (
         <div>
-            <h1>{name}</h1>
-            <h4>{price}</h4>
-            
-            <button onClick={onbuy}>Buy now</button>
+            <h2>{product.name}</h2>
+            <h4>{product.price}</h4>
+
+            <button onClick={() => (onBuy(product.name))}>Buy Now</button>
         </div>
-    );
-})
+    )
+});
 
 function App() {
 
     const [count, setCount] = useState(0);
+    const [maxPrice, setMaxPrice] = useState(10000);
 
-    const handleBuy = useCallback(() => {
-        console.log("Product Purchased!");
+    console.log("App Components Rendered.");
+
+    const handleBuy = useCallback((name) => {
+        console.log(`${name} Purchased!`);
     }, []);
+
+    const filteringProducts = useMemo(() => {
+        console.log("Filtering Products...");
+
+        return products.filter((product) => product.price <= maxPrice)
+    }, [maxPrice]);
 
     return (
         <div>
+            
+            <h1>ONLINE SHOPING CENTER</h1>
+  
             <h2>Count : {count}</h2>
 
             <button onClick={() => setCount(count + 1)}>Increase</button>
+            <hr />
 
-            <Product name = "Laptop" price = {899999} onbuy = {handleBuy}/>
+            <h2>Maximum Price : {maxPrice}</h2>
+
+            <input type= "range"
+                min={1000}
+                max={100000}
+                step={1000}
+                value={maxPrice}
+                onChange={(e) => setMaxPrice(Number(e.target.value))}
+            />
+
+            <hr />
+
+            {filteringProducts.map((product) => (
+                <Product key = {product.id} product = {product} onBuy = {handleBuy}/>
+            ))}
+
         </div>
     );
+
 }
 
 export default App;
