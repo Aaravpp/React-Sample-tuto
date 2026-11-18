@@ -670,83 +670,132 @@
 
 // useReducer
 
-import { act, useReducer } from "react";
+import { useReducer, useEffect } from "react";
 
 const initialState = {
     name : "",
     age : 0,
     email : "",
-    isSubmitted : false
+    isSubmitted : false,
+    error : ""
 };
 
-function reducer(state, action){
+function reducer(state, action) {
     switch (action.type) {
-        case "UPDATE_NAME":
+        case "UPDATE_NAME" :
             return {
                 ...state,
-                name : action.payload
-            };
+                name : action.payload,
+                isSubmitted : false,
+                error : ""
+            }
         
-        case "UPDATE_AGE":
+        case "UPDATE_AGE" :
             return {
                 ...state,
-                age : action.payload
-            };
+                age : action.payload,
+                isSubmitted : false,
+                error : ""
+            }
 
-        case "UPDATE_EMAIL":
+        case "UPDATE_EMAIL" :
             return {
                 ...state,
-                email : action.payload
-            };
+                email : action.payload,
+                isSubmitted : false,
+                error : ""
+            }
 
         case "SUBMIT" :
+            if(!state.name || !state.age || !state.email) {
+                return {
+                    ...state,
+                    error : "Please fill the all fields. "
+                }
+            }
             return {
                 ...state,
-                isSubmitted : action.payload
-            };
+                isSubmitted : true,
+                error : ""
+            }
+
+        case "RESET" :
+            return initialState;
 
         default:
             return state;
-    }
+    }   
 }
 
-function App() {
-
+function App () {
     const [state, dispatch] = useReducer(reducer, initialState);
+
+    useEffect(() => {
+        if (state.isSubmitted) {
+            console.log("Form Submitted Successfully!");
+            console.log("Name:", state.name);
+            console.log("Age:", state.age);
+            console.log("Email:", state.email);
+        }
+    }, [state.isSubmitted])
 
     return (
         <div>
+            <h1>Registration Form</h1>
+            <hr />
             <input type="text"
-            placeholder="Name"
-            value={state.name}
-            onChange={(e) => dispatch(
-                {type : "UPDATE_NAME",
-                    payload : e.target.value
+                placeholder="Entet Your Name"
+                value={state.name}
+                onChange={(e) => 
+                    dispatch({
+                        type : "UPDATE_NAME",
+                        payload : e.target.value
+                    })
                 }
-            )}
             />
 
             <input type= "number"
-            placeholder="Age"
-            value={state.age}
-            onChange={(e) => dispatch({
-                type : "UPDATE_AGE",
-                payload : e.target.value
-            })}
+                placeholder="Enter your age"
+                value={state.age}
+                onChange={(e) => 
+                    dispatch({
+                        type : "UPDATE_AGE",
+                        payload : Number(e.target.value)
+                    })
+                }
             />
 
-            <input type= "email"
-            placeholder="Email"
-            value={state.email}
-            onChange={(e) => dispatch({
-                type : "UPDATE_EMAIL",
-                payload : e.target.value
-            })}
+            <input type="email"
+                placeholder="Email"
+                value={state.email}
+                onChange={(e) =>
+                    dispatch({
+                        type : "UPDATE_EMAIL",
+                        payload : e.target.value
+                    })
+                }
             />
 
-            <button onClick={() => dispatch({
-                type : "SUBMIT"})}>
-            Submit</button>
+            <button onClick={() => dispatch({type : "SUBMIT"})}>Submit</button>
+            <button onClick={() => dispatch({type : "RESET"})}>RESET</button>
+            
+            <hr />
+
+            {state.error && (
+                <h3>{state.error}</h3>
+            )}
+
+            {state.isSubmitted && (
+                <div>
+                    <h2>Form Submittede Successfully!</h2>
+                    <hr />
+    
+                    <h2>NAME : {state.name}</h2>
+                    <h3>AGE : {state.age}</h3>
+                    <h3>Email : {state.email}</h3>
+                </div>
+            )}
+
         </div>
     )
 }
